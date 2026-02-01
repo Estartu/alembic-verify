@@ -1,17 +1,22 @@
-# -*- coding: utf-8 -*-
+"""Test utilities."""
+
+from contextlib import contextmanager
 from unittest import TestCase
 
-import six
+from sqlalchemy.orm import sessionmaker
 
 
-if six.PY2:
+Case = TestCase()
+# "Diff is 4452 characters long. Set self.maxDiff to None to see it". Okay:
+Case.maxDiff = None
+assert_items_equal = Case.assertCountEqual
 
-    class TestCasePatch(TestCase):
-        """Provide the assert_items_equal method for testing. """
-        def runTest(self, *a, **kwa):  # Hack needed only in Python 2
-            pass
-    assert_items_equal = TestCasePatch().assertItemsEqual
 
-else:
-
-    assert_items_equal = TestCase().assertCountEqual
+@contextmanager
+def session_for_engine(engine):
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    try:
+        yield session
+    finally:
+        session.close()
