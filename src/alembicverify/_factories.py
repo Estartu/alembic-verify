@@ -3,7 +3,6 @@ from collections.abc import Callable, Generator
 from contextlib import contextmanager
 from typing import Any
 
-import pytest
 from alembic.config import Config
 from sqlalchemy_utils import create_database, drop_database
 
